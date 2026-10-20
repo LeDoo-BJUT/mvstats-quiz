@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>多元统计分析与 R 语言建模 · 出题</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="app-header">
+      <div>
+        <h1>多元统计分析与 R 语言建模 · 出题</h1>
+        <div class="sub">第 1–9 章课件与实验 1–9 · 练习站</div>
+      </div>
+      <div class="header-counts" id="header-counts" aria-live="polite"></div>
+    </header>
+
+    <section id="home" class="card intro">
+      <p class="lead">本站题目均来自课程课件与实验作业原文整理：客观题可即时判分；简答以课件原话为参考；案例分析对应实验中的真实任务与数据集。</p>
+      <p>练习时可按章、按题型筛选；支持收藏、错题本与抽题组卷。进度保存在本机浏览器（localStorage）。</p>
+      <div class="stats" id="home-stats"></div>
+
+      <div class="mode-chips" id="home-modes" role="tablist" aria-label="练习模式">
+        <button type="button" class="chip active" data-mode="all" id="chip-all">全部练习</button>
+        <button type="button" class="chip" data-mode="favorites" id="chip-fav">收藏 <span class="chip-n" id="chip-fav-n">0</span></button>
+        <button type="button" class="chip" data-mode="wrong" id="chip-wrong">错题 <span class="chip-n" id="chip-wrong-n">0</span></button>
+        <button type="button" class="chip" data-mode="paper" id="chip-paper">抽题组卷</button>
+      </div>
+
+      <div id="paper-panel" class="paper-panel hidden">
+        <h3 class="panel-title">抽题组卷</h3>
+        <div class="paper-grid">
+          <div class="field">
+            <label>章节（可多选）</label>
+            <div class="chapter-checks" id="paper-chapters">
+              <label class="check"><input type="checkbox" value="all" id="paper-ch-all" checked /> 全部</label>
+              <label class="check"><input type="checkbox" value="1" class="paper-ch" /> 第1章</label>
+              <label class="check"><input type="checkbox" value="2" class="paper-ch" /> 第2章</label>
+              <label class="check"><input type="checkbox" value="3" class="paper-ch" /> 第3章</label>
+              <label class="check"><input type="checkbox" value="4" class="paper-ch" /> 第4章</label>
+              <label class="check"><input type="checkbox" value="5" class="paper-ch" /> 第5章</label>
+              <label class="check"><input type="checkbox" value="6" class="paper-ch" /> 第6章</label>
+              <label class="check"><input type="checkbox" value="7" class="paper-ch" /> 第7章</label>
+              <label class="check"><input type="checkbox" value="8" class="paper-ch" /> 第8章</label>
+              <label class="check"><input type="checkbox" value="9" class="paper-ch" /> 第9章</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="paper-type">题型（可选）</label>
+            <select id="paper-type">
+              <option value="all">全部题型</option>
+              <option value="single">单选</option>
+              <option value="multi">多选</option>
+              <option value="judge">判断</option>
+              <option value="blank">填空</option>
+              <option value="short">简答</option>
+              <option value="case">案例分析</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="paper-n">题量 N</label>
+            <input type="number" id="paper-n" min="1" value="20" />
+            <span class="hint" id="paper-pool-hint">可选池：—</span>
+          </div>
+          <label class="toggle paper-prop">
+            <input type="checkbox" id="paper-proportional" /> 按题型比例抽样
+          </label>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btn-start-paper" type="button">生成并开始</button>
+        </div>
+      </div>
+
+      <div class="actions" id="home-enter-row">
+        <button class="btn" id="btn-enter" type="button">进入练习</button>
+      </div>
+      <p class="kbd">快捷键：<kbd>1</kbd>–<kbd>5</kbd> 选题 · <kbd>Enter</kbd> 提交 · <kbd>←</kbd>/<kbd>→</kbd> 上一题/下一题</p>
+    </section>
+
+    <section id="practice" class="hidden">
+      <div class="toolbar card">
+        <div class="mode-chips compact" id="practice-modes">
+          <button type="button" class="chip" data-mode="all">全部练习</button>
+          <button type="button" class="chip" data-mode="favorites">收藏</button>
+          <button type="button" class="chip" data-mode="wrong">错题</button>
+          <button type="button" class="chip" data-mode="paper">抽题组卷</button>
+        </div>
+        <div class="field filter-only" id="filter-ch-wrap">
+          <label for="filter-ch">章节</label>
+          <select id="filter-ch">
+            <option value="all">全部</option>
+            <option value="1">第1章 概述</option>
+            <option value="2">第2章 数学表达</option>
+            <option value="3">第3章 直观表示</option>
+            <option value="4">第4章 相关与回归</option>
+            <option value="5">第5章 广义与一般线性模型</option>
+            <option value="6">第6章 判别分析</option>
+            <option value="7">第7章 聚类分析</option>
+            <option value="8">第8章 主成分</option>
+            <option value="9">第9章 因子分析</option>
+          </select>
+        </div>
+        <div class="field filter-only" id="filter-type-wrap">
+          <label for="filter-type">题型</label>
+          <select id="filter-type">
+            <option value="all">全部</option>
+            <option value="single">单选</option>
+            <option value="multi">多选</option>
+            <option value="judge">判断</option>
+            <option value="blank">填空</option>
+            <option value="short">简答</option>
+            <option value="case">案例分析</option>
+          </select>
+        </div>
+        <label class="toggle" id="shuffle-wrap"><input type="checkbox" id="toggle-shuffle" /> 随机顺序</label>
+        <button class="btn secondary" id="btn-restart" type="button">重新开始</button>
+        <button class="btn secondary" id="btn-finish" type="button">交卷</button>
+        <button class="btn ghost" id="btn-home" type="button">返回首页</button>
+      </div>
+
+      <div class="card" id="practice-card">
+        <div class="meta-row">
+          <span id="progress-text">0 / 0</span>
+          <span class="score-pill" id="score-text">答对 0 / 已答 0 · 正确率 —</span>
+        </div>
+        <div class="progress-bar"><span id="progress-fill"></span></div>
+
+        <div id="question-area"></div>
+
+        <div class="actions" id="nav-actions">
+          <button class="btn ghost" id="btn-prev" type="button">上一题</button>
+          <button class="btn" id="btn-submit" type="button">提交</button>
+          <button class="btn secondary" id="btn-next" type="button">下一题</button>
+        </div>
+      </div>
+
+      <div class="card hidden" id="summary-card">
+        <h2 class="summary-title">本场小结</h2>
+        <div id="summary-body"></div>
+        <div class="actions">
+          <button class="btn" id="btn-retry" type="button">再练一遍</button>
+          <button class="btn secondary" id="btn-retry-wrong" type="button">只练错题</button>
+          <button class="btn ghost" id="btn-summary-home" type="button">返回首页</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="note">
+      题库说明：题目根据本课第1–9章课件与实验1–9作业整理，简答参考答案为课件原话，案例来自实验题目。不追踪、无外链依赖。
+    </footer>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
