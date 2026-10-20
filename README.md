@@ -1,1 +1,5 @@
-# mvstats-quiz
+# 多元统计分析与 R 语言建模 · 出题练习站
+
+按第1–9章课件与实验1–9整理的练习题，含单选、多选、判断、填空、简答、案例分析，支持收藏、错题本、抽题组卷
+
+https://ledoo-bjut.github.io/mvstats-quiz/
